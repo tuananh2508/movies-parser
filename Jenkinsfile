@@ -1,4 +1,4 @@
-def dockerImage = ta2199/demo-jenkins-movies-parser
+def dockerImage = 'ta2199/demo-jenkins-movies-parser'
 
 node ('workers'){
     stage('Checkout'){
