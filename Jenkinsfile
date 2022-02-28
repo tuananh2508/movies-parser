@@ -4,14 +4,26 @@ node ('workers'){
     stage('Checkout'){
         checkout scm
     }
-    stage('Build Docker Image with QA test'){
-        docker.withRegistry('', '8266d0f0-bf5a-495c-bdbf-896e4f36e65c'){
-            def imageTest = docker.build("${dockerImage}-test", "-f Dockerfile .")
-            imageTest.inside{
-                sh 'golint'
-            }
+
+    def imageTest = docker.build("${dockerImage}-test", "-f Dockerfile .")
+
+    stage('QA test'){
+        imageTest.inside{
+            sh 'golint'
         }
     }
+
+    stage('Unit test'){
+        imageTest.inside('-u root:root'){
+            sh 'go test'
+        }
+    }
+    
+    stage('Security test'){
+    	imageTest.inside('-u root:root'){
+            sh 'nancy /go/src/github/mlabouardy/movies-parser/Gopkg.lock'
+        }
 }
+
 
 
