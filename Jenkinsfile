@@ -23,6 +23,7 @@ node ('workers'){
     	imageTest.inside('-u root:root'){
             sh 'nancy /go/src/github/mlabouardy/movies-parser/Gopkg.lock'
         }
+    }
 }
 
 
