@@ -3,6 +3,6 @@ WORKDIR /go/src/github.com/mlabouardy/movies-loader
 ENV GOCACHE /tmp
 WORKDIR /go/src/github/mlabouardy/movies-parser
 RUN go get -u golang.org/x/lint/golint
-RUN chmod +wr -R /go/
+RUN chmod 777 -R /go/
 COPY . .
 RUN go get -v
