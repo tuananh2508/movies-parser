@@ -1,51 +1,15 @@
-def imageName = 'mlabouardy/movies-parser'
-def registry = 'https://registry.slowcoder.com'
+def dockerImage = 'ta2199/demo-jenkins-movies-parser'
 
-node('workers'){
+node ('workers'){
     stage('Checkout'){
         checkout scm
     }
-
-    def imageTest= docker.build("${imageName}-test", "-f Dockerfile.test .")
-
-    stage('Pre-integration Tests'){
-        parallel(
-            'Quality Tests': {
-                imageTest.inside{
-                    sh 'golint'
-                }
-            },
-            'Unit Tests': {
-                imageTest.inside{
-                    sh 'go test'
-                }
-            },
-            'Security Tests': {
-                imageTest.inside('-u root:root'){
-                    sh 'nancy /go/src/github/mlabouardy/movies-parser/Gopkg.lock'
-                }
-            }
-        )
-    }
-
-    stage('Build'){
-        docker.build(imageName)
-    }
-
-    stage('Push'){
-        docker.withRegistry(registry, 'registry') {
-            docker.image(imageName).push(commitID())
-
-            if (env.BRANCH_NAME == 'develop') {
-                docker.image(imageName).push('develop')
+    stage('Build Docker Image with QA test'){
+        docker.withRegistry('', '8266d0f0-bf5a-495c-bdbf-896e4f36e65c'){
+            def imageTest = docker.build("${dockerImage}-test", "-f Dockerfile .")
+            imageTest.inside{
+                sh 'golint'
             }
         }
     }
-}
-
-def commitID() {
-    sh 'git rev-parse HEAD > .git/commitID'
-    def commitID = readFile('.git/commitID').trim()
-    sh 'rm .git/commitID'
-    commitID
 }
