@@ -44,5 +44,5 @@ def commitID(){
     sh 'git rev-parse HEAD > .git/CommitID'
     def commitID = readFile('.git/CommitID').trim()
     sh 'rm .git/CommitID'
-    CommitID
+    commitID
 }
