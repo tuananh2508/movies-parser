@@ -31,7 +31,7 @@ node ('workers'){
 
     stage('Push Image'){
         docker.withRegistry('', '8266d0f0-bf5a-495c-bdbf-896e4f36e65c'){
-            docker.image(dockerImage).push(commitId())
+            docker.image(dockerImage).push(commitID())
 
             if (env.BRANCH_NAME == 'develop'){
                 docker.image(dockerImage).push('develop')
