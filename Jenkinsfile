@@ -1,6 +1,6 @@
 def dockerImage = 'ta2199/demo-jenkins-movies-parser'
 def registry = ''
-node ('workers'){
+node ('anhvt'){
     stage('Checkout'){
         checkout scm
     }
